@@ -24,12 +24,15 @@ def endpoint():
             end = part.find(b'\r\n--')
             json_data = {"id": part[start:end].decode('utf-8')}
 
-    file_name = json_data.get('id', 'file') + '.png'
-    if image_data:
+    if image_data and json_data:
+        # use the image hash that was sent as id to crate the file name
+        file_name = json_data.get('id', 'file') + '.png'
         with open(STORE_IRISES_PATH + file_name, "wb") as f:
             f.write(image_data)
 
-    return f"Uplodaded object {json_data}", 200
+        return f"Uploaded object {json_data}", 200
+
+    return "Failed to upload object", 400
 
 
 @app.route('/status', methods=['POST'])
@@ -40,5 +43,3 @@ def status():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000)
-
-#export PYTHONPATH=$PYTHONPATH:/path/to/directory

@@ -1,5 +1,6 @@
 import unittest
 import orb
+import config
 
 
 class TestOrbDevice(unittest.TestCase):
@@ -62,17 +63,17 @@ class TestOrbDevice(unittest.TestCase):
         assert self.orb_device.disk_space == 50
 
         self.orb_device.simulate_orb_device_reset()
-        assert self.orb_device.cpu_temp == 20
-        assert self.orb_device.cpu_usage == 0
-        assert self.orb_device.battery == 100
-        assert self.orb_device.disk_space == 100
+        assert self.orb_device.cpu_temp == config.CPU_TEMP_RESET_VALUE
+        assert self.orb_device.cpu_usage == config.CPU_USAGE_RESET_VALUE
+        assert self.orb_device.battery == config.BATTERY_RESET_VALUE
+        assert self.orb_device.disk_space == config.DISK_SPACE_RESET_VALUE
 
     def test_simulate_orb_full_recharge(self):
         self.orb_device.update_battery(delta=-80)
         assert self.orb_device.battery == 20
 
         self.orb_device.simulate_orb_full_recharge()
-        assert self.orb_device.battery == 100
+        assert self.orb_device.battery == config.BATTERY_RESET_VALUE
 
 
 if __name__ == '__main__':

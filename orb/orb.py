@@ -7,18 +7,20 @@ import threading
 import time
 import logging
 from config import SIGNUP_URL, REPORT_STATUS_URL, IRISES_PATH, STATUS_REPORT_INTERVAL, LIFE_EVENT_INTERVAL, \
-    TEMP_DELTA, BATTERY_UPDATE_DELTA, DISK_SPACE_DELTA, CPU_USAGE_DELTA
+    CPU_TEMP_DELTA, BATTERY_UPDATE_DELTA, DISK_SPACE_DELTA, CPU_USAGE_DELTA, BATTERY_RESET_VALUE, CPU_TEMP_RESET_VALUE, \
+    CPU_USAGE_RESET_VALUE, DISK_SPACE_RESET_VALUE
 
 
 class VirtualOrb:
 
     def __init__(self):
 
+        # set default values on orb device
         self.id = uuid.uuid1()  # unique id of the orb
-        self.battery = 100  # available battery in %
-        self.cpu_usage = 0  # usage in %
-        self.cpu_temp = 20  # degrees Celsius
-        self.disk_space = 100  # avail space on disk
+        self.battery = BATTERY_RESET_VALUE  # available battery in %
+        self.cpu_usage = CPU_USAGE_RESET_VALUE  # usage in %
+        self.cpu_temp = CPU_TEMP_RESET_VALUE  # degrees Celsius
+        self.disk_space = DISK_SPACE_RESET_VALUE  # avail space on disk in %
 
     @staticmethod
     def validate_max(value, metric):
@@ -31,23 +33,22 @@ class VirtualOrb:
             raise Exception(f"Invalid value of {value} for metric {metric}, needs reset...")
 
     def update_battery(self, delta=0, reset=False):
-        self.battery = 100 if reset else self.battery + delta
+        self.battery = BATTERY_RESET_VALUE if reset else self.battery + delta
         self.validate_min(self.battery, 'battery')
 
     def update_cpu_values(self, usage=0, temperature=0, reset=False):
-        self.cpu_usage = 0 if reset else self.cpu_usage + usage
+        self.cpu_temp = CPU_TEMP_RESET_VALUE if reset else self.cpu_temp + temperature
+        self.cpu_usage = CPU_USAGE_RESET_VALUE if reset else self.cpu_usage + usage
         self.validate_max(self.cpu_usage, 'cpu usage')
 
-        self.cpu_temp = 20 if reset else self.cpu_temp + temperature
-
     def update_disk_space(self, delta=0, reset=False):
-        self.disk_space = 100 if reset else self.disk_space + delta
+        self.disk_space = DISK_SPACE_RESET_VALUE if reset else self.disk_space + delta
         self.validate_min(self.disk_space, 'disk space')
 
     def simulate_orb_usage(self):
         self.update_battery(delta=BATTERY_UPDATE_DELTA)
         self.update_disk_space(delta=DISK_SPACE_DELTA)
-        self.update_cpu_values(usage=CPU_USAGE_DELTA, temperature=TEMP_DELTA)
+        self.update_cpu_values(usage=CPU_USAGE_DELTA, temperature=CPU_TEMP_DELTA)
 
     def simulate_orb_full_recharge(self):
         self.update_battery(reset=True)
@@ -112,8 +113,9 @@ class VirtualOrb:
         while True:
             try:
                 time.sleep(LIFE_EVENT_INTERVAL)
-                event = random.randint(1, 10)
 
+                # the probabilities for the events below are arbitrary
+                event = random.randint(1, 10)
                 if 1 <= event <= 8:
                     self.do_signup()
                 elif event == 9:
