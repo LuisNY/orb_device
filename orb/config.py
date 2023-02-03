@@ -1,7 +1,7 @@
 # below are all the variables that can be configured for testing purposes
 
-BASE_URL = 'http://localhost:8000'
-IRISES_PATH = 'orb/irises/'
+BASE_URL = 'http://192.168.0.2:8002'
+IRISES_PATH = './irises/'
 
 SIGNUP_URL = BASE_URL + '/signup'
 REPORT_STATUS_URL = BASE_URL + '/status'

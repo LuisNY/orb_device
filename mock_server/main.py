@@ -1,8 +1,8 @@
 from flask import Flask, request
-
+import logging
 app = Flask(__name__)
 
-STORE_IRISES_PATH = 'mock_server/stored_irises/'
+STORE_IRISES_PATH = './stored_irises/'
 
 
 @app.route('/signup', methods=['POST'])
@@ -30,6 +30,7 @@ def endpoint():
         with open(STORE_IRISES_PATH + file_name, "wb") as f:
             f.write(image_data)
 
+        logging.warning(STORE_IRISES_PATH + file_name)
         return f"Uploaded object {json_data}", 200
 
     return "Failed to upload object", 400
@@ -37,9 +38,11 @@ def endpoint():
 
 @app.route('/status', methods=['POST'])
 def status():
+    logging.warning(request.get_json())
     data = request.get_json()
     return f"status reported {data}", 200
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)
+    logging.warning('server is up')
+    app.run(host="0.0.0.0", port=8002)
