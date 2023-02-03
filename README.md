@@ -4,6 +4,7 @@ This project includes:
 1) a virtual Orb device that simulates status report and signups by sending POST requests to a configurable address
 2) a mock-server that is used to test the virtual orb device
 
+
 The mock-server is just a Flask server that implements 2 API endpoints:
 - signup => to test the signup functionality of the virtual orb
 - status report => to test the status report functionality of the virtual orb
