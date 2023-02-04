@@ -3,7 +3,7 @@ version: '3'
 services:
 
   mock-server:
-    container_name: mock-server
+    container_name: mock_server
     build: ./mock_server
     ports:
       - 8002:8002
@@ -13,8 +13,8 @@ services:
   orb:
     container_name: orb
     build: ./orb
-#    links:
-#      - mock-server:alias
+    links:
+      - mock-server
     ports:
       - 8001:8001
     networks:
