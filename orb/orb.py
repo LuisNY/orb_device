@@ -51,9 +51,11 @@ class VirtualOrb:
         self.update_cpu_values(usage=CPU_USAGE_DELTA, temperature=CPU_TEMP_DELTA)
 
     def simulate_orb_full_recharge(self):
+        logging.warning('orb full charge')
         self.update_battery(reset=True)
 
     def simulate_orb_device_reset(self):
+        logging.warning('orb reset')
         self.update_battery(reset=True)
         self.update_disk_space(reset=True)
         self.update_cpu_values(reset=True)
@@ -69,7 +71,7 @@ class VirtualOrb:
         }
 
         response = requests.post(REPORT_STATUS_URL, json=data)
-        logging.info(response.text)
+        logging.warning(response.text)
 
         self.simulate_orb_usage()
 
@@ -89,7 +91,7 @@ class VirtualOrb:
         files = {"image": ("example.jpg", image_data)}
 
         response = requests.post(SIGNUP_URL, data=data, files=files)
-        logging.info(response.text)
+        logging.warning(response.text)
 
         self.simulate_orb_usage()
 
@@ -99,6 +101,7 @@ class VirtualOrb:
         while True:
             try:
                 time.sleep(STATUS_REPORT_INTERVAL)
+
                 self.do_report_status()
             except Exception as e:
                 logging.warning(e)

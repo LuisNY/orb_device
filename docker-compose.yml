@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
 
@@ -13,8 +13,8 @@ services:
   orb:
     container_name: orb
     build: ./orb
-    links:
-      - mock-server:alias
+#    links:
+#      - mock-server:alias
     ports:
       - 8001:8001
     networks:
